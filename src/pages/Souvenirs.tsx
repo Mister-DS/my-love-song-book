@@ -42,18 +42,28 @@ const Souvenirs = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const compliments = [
-    "Tu illumines chaque journée de ma vie",
-    "Ton sourire fait fondre mon cœur",
-    "Tu es la plus belle chose qui me soit arrivée",
-    "Avec toi, je me sens complet",
-    "Tu es ma source d'inspiration quotidienne"
+    "Tes écarts de folies",
+    "Ta manière de bouder",
+    "Ton rire contagieux",
+    "La douceur de tes câlins",
+    "Ton intelligence et ta sagesse",
+    "Ta passion pour l'amour",
+    "la manière dont tu montres que je suis à toi",
+    "Ta gentillesse", 
+    "Tes magnifiques yeux bleus",
+    "Tes cheveux d'or",
+    "Ton visage si doux et parfait",
+    "Ton corps si joli",
+    "Tous tes petits défauts qui te rendent unique",
   ];
 
   const timeline = [
-    { date: "Premier regard", description: "Le moment où nos yeux se sont croisés" },
-    { date: "Premier rendez-vous", description: "Cette soirée magique ensemble" },
-    { date: "Je t'aime", description: "Ces trois petits mots qui ont tout changé" },
-    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir" }
+    { date: "Premier Message (Octobre 2023)", description: "Le moment où nos chemin se sont croisés" },
+    { date: "Premier rendez-vous (Janvier 2024)", description: "Cette soirée magique ensemble" },
+    { date: "Premier baiser (Janvier 2024)", description: "Le début de notre histoire" },
+    { date: "Je t'aime (Février 2024)", description: "Ces trois petits mots qui ont tout changé" },
+    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir" },
+    { date: "Pour toujours", description: "Je promets de toujours t'aimer et te chérir 💕" },
   ];
 
   // Charger le meilleur score au démarrage
