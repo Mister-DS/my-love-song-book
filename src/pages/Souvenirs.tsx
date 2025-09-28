@@ -285,7 +285,7 @@ const Souvenirs = () => {
                     <div className="flex-1 pb-8">
                       <div className="bg-muted/30 rounded-lg p-4">
                         <h3 className="font-semibold text-primary text-lg">{moment.date}</h3>
-                        <p className="text-muted-foreground mt-1">{moment.description}</p<p className="text-muted-foreground mt-1">{moment.description}</p>
+                        <p className="text-muted-foreground mt-1">{moment.description}</p>
                         {index === timeline.length - 1 && (
                           <div className="mt-2 flex space-x-1">
                             <Heart className="w-4 h-4 text-primary animate-float-heart" fill="currentColor" />
@@ -414,7 +414,7 @@ const Souvenirs = () => {
                   <p>Je sais que je ne suis pas toujours facile à vivre. Mon caractère peut parfois être difficile, et je m'en excuse sincèrement.</p>
                   <p className="mt-2">Mais sache que tu es la lumière de ma vie, et je veux devenir une meilleure version de moi-même pour nous deux.</p>
                   <p className="mt-2">Dans ma vie je n'ai jamais eu vraiment de relation donc je veux tout faire pour conserver la seule, la nôtre...</p>
-                  <p className="mt-2">Je sais que je suis pas hyper doué voir pas dutout... mais je t'aime d'un amour sincère. Toutes les autres putes peuvents aller se faire mettre.</p>
+                  <p className="mt-2">Je sais que je suis pas hyper doué voir pas dutout... mais je t'aime d'un amour sincère.</p>
                   <p className="mt-2 font-romantic">Avec tout mon amour, Simon 💕</p>
                 </div>
               )}
@@ -519,7 +519,11 @@ const Souvenirs = () => {
             {[
               { text: "Je te pardonne 💕", value: "pardonne" },
               { text: "Encore un effort", value: "effort" },
-              { text: "Bisou virtuel 💋", value: "bisou" }
+              { text: "Bisou virtuel 💋", value: "bisou" },
+              { text: "Je t'aime plus fort ❤️", value: "aime" },
+              { text: "Je ne suis pas bien 😔", value: "pas_bien" },
+              { text: "Je me sens seule 😢", value: "seule" },
+              { text: "j'ai besoin de soutien 🤗", value: "soutien" },
             ].map(choice => (
               <Button
                 key={choice.value}
@@ -546,7 +550,11 @@ const Souvenirs = () => {
               { text: "Un câlin 🤗", value: "calin" },
               { text: "Une sortie 💫", value: "sortie" },
               { text: "Du silence 🌙", value: "silence" },
-              { text: "Un resto 🍽", value: "resto" }
+              { text: "Un resto 🍽", value: "resto" },
+              { text: "Des fleurs 🌹", value: "fleurs" },
+              { text: "Un massage 💆‍♀️", value: "massage" },
+              { text: "Des surprises 🎁", value: "surprises" },
+              { text: "Juste toi ❤️", value: "toi" },
             ].map(choice => (
               <Button
                 key={choice.value}
