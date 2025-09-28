@@ -87,15 +87,17 @@ const Index = () => {
         </div>
 
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Photo de couple */}
+          {/* Photo de couple - CORRIGÉ */}
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg border-2 border-primary/20">
             <CardContent className="p-8 text-center">
-              <div className="relative inline-block">
-                <div className="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-full overflow-hidden border-4 border-primary/30 shadow-lg">
+              <div className="relative mx-auto max-w-[280px]">
+                <div className="aspect-square w-full mx-auto rounded-full overflow-hidden border-4 border-primary/30 shadow-lg">
                   <img 
                     src={couplePhoto}
                     alt="Notre photo ensemble"
                     className="w-full h-full object-cover object-center"
+                    style={{ objectFit: 'cover' }}
+                    onError={(e) => console.error("Erreur de chargement de l'image:", e)}
                   />
                 </div>
                 <div className="absolute -top-2 -right-2 text-3xl animate-pulse-glow">💕</div>
