@@ -80,10 +80,48 @@ export default {
             height: "0",
           },
         },
+        // Romantic animations
+        "sparkle": {
+          "0%, 100%": { opacity: "0.8" },
+          "50%": { opacity: "1" }
+        },
+        "typing": {
+          "from": { width: "0" },
+          "to": { width: "100%" }
+        },
+        "blink-caret": {
+          "from, to": { borderColor: "transparent" },
+          "50%": { borderColor: "hsl(340, 82%, 52%)" }
+        },
+        "float-heart": {
+          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
+          "33%": { transform: "translateY(-10px) rotate(1deg)" },
+          "66%": { transform: "translateY(-5px) rotate(-1deg)" }
+        },
+        "shoot": {
+          "0%": {
+            transform: "translateX(-100px) translateY(-100px)",
+            opacity: "1"
+          },
+          "100%": {
+            transform: "translateX(200px) translateY(200px)",
+            opacity: "0"
+          }
+        },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 5px hsl(340, 82%, 52%, 0.5)" },
+          "50%": { boxShadow: "0 0 20px hsl(340, 82%, 52%, 0.8)" }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "sparkle": "sparkle 4s ease-in-out infinite alternate",
+        "typing": "typing 3s steps(40, end)",
+        "blink-caret": "blink-caret 1s step-end infinite",
+        "float-heart": "float-heart 3s ease-in-out infinite",
+        "shoot": "shoot 3s linear infinite",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite"
       },
     },
   },

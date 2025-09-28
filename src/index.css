@@ -1,42 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Romantic design system for love letter website */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Romantic color palette */
+    --background: 342 100% 98%;
+    --foreground: 340 15% 25%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 340 15% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 340 15% 25%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 340 82% 52%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 200 50% 90%;
+    --secondary-foreground: 340 15% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 45 100% 96%;
+    --muted-foreground: 340 10% 50%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 270 50% 85%;
+    --accent-foreground: 340 15% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 340 20% 90%;
+    --input: 340 20% 95%;
+    --ring: 340 82% 52%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
+
+    /* Custom romantic gradients */
+    --gradient-romantic: linear-gradient(135deg, hsl(340, 82%, 52%) 0%, hsl(270, 50%, 85%) 50%, hsl(200, 50%, 90%) 100%);
+    --gradient-stars: radial-gradient(circle at 25% 25%, hsl(45, 100%, 90%) 0%, transparent 50%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(340, 20%, 98%) 100%);
+    
+    /* Romantic shadows */
+    --shadow-romantic: 0 10px 30px -10px hsl(340, 82%, 52%, 0.2);
+    --shadow-card: 0 8px 25px -8px hsl(340, 30%, 70%, 0.15);
+    --shadow-glow: 0 0 20px hsl(340, 82%, 52%, 0.3);
+
+    /* Animation timings */
+    --transition-romantic: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-gentle: all 0.3s ease-out;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +115,109 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
+
+  .font-romantic {
+    font-family: 'Dancing Script', cursive;
+  }
+}
+
+@layer components {
+  /* Starry background animation */
+  .starry-bg {
+    background: 
+      radial-gradient(2px 2px at 20px 30px, hsl(45, 100%, 90%), transparent),
+      radial-gradient(2px 2px at 40px 70px, hsl(200, 50%, 90%), transparent),
+      radial-gradient(1px 1px at 90px 40px, hsl(270, 50%, 85%), transparent),
+      radial-gradient(1px 1px at 130px 80px, hsl(340, 82%, 52%), transparent),
+      radial-gradient(2px 2px at 160px 30px, hsl(45, 100%, 90%), transparent),
+      linear-gradient(135deg, hsl(342, 100%, 98%) 0%, hsl(340, 20%, 96%) 100%);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: sparkle 4s ease-in-out infinite alternate;
+  }
+
+  /* Typewriter effect */
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid hsl(340, 82%, 52%);
+    white-space: nowrap;
+    animation: typing 3s steps(40, end), blink-caret 1s step-end infinite;
+  }
+
+  /* Heart floating animation */
+  .floating-heart {
+    animation: float-heart 3s ease-in-out infinite;
+  }
+
+  /* Romantic button styles */
+  .btn-romantic {
+    background: var(--gradient-romantic);
+    box-shadow: var(--shadow-romantic);
+    transition: var(--transition-romantic);
+  }
+
+  .btn-romantic:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Shooting star */
+  .shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: hsl(45, 100%, 90%);
+    border-radius: 50%;
+    animation: shoot 3s linear infinite;
+  }
+
+  .shooting-star::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(to right, hsl(45, 100%, 90%), transparent);
+  }
+}
+
+/* Romantic keyframe animations */
+@keyframes sparkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: hsl(340, 82%, 52%); }
+}
+
+@keyframes float-heart {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(1deg); }
+  66% { transform: translateY(-5px) rotate(-1deg); }
+}
+
+@keyframes shoot {
+  0% {
+    transform: translateX(-100px) translateY(-100px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200px) translateY(200px);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px hsl(340, 82%, 52%, 0.5); }
+  50% { box-shadow: 0 0 20px hsl(340, 82%, 52%, 0.8); }
 }
