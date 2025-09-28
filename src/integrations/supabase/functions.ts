@@ -172,6 +172,8 @@ export const getMessageStats = async () => {
   }
 };
 
+/* Correction de la récupération des meilleurs scores */
+
 /**
  * Récupère les meilleurs scores
  * @param limit Nombre maximal de scores à récupérer (par défaut 10)
