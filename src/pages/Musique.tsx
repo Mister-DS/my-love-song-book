@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Upload, Play, Pause, Heart, Music } from "lucide-react";
+import { ArrowLeft, Upload, Play, Pause, Heart, Music, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const Musique = () => {
   const navigate = useNavigate();
@@ -18,16 +19,17 @@ const Musique = () => {
   const [audioFile, setAudioFile] = useState<string>("");
   const [lyricsIndex, setLyricsIndex] = useState(0);
   const [heartBeats, setHeartBeats] = useState<{id: number, x: number, y: number}[]>([]);
+  const [savedSongs, setSavedSongs] = useState<{id: string, title: string, file_name: string, created_at: string}[]>([]);
 
   const lyrics = [
-    "🎵 Cette chanson me fait penser à toi... 🎵",
-    "💕 À chaque note, je pense à ton sourire 💕",
-    "🌟 Tu es la mélodie de ma vie 🌟",
-    "💖 Ensemble, nous créons la plus belle symphonie 💖",
-    "🦋 Dans tes bras, je trouve la paix 🦋",
-    "✨ Tu es ma plus belle chanson d'amour ✨",
-    "💌 Chaque battement de cœur résonne pour toi 💌",
-    "🎶 Notre amour est une mélodie éternelle 🎶"
+    "Cette chanson me fait penser à toi...",
+    "À chaque note, je pense à ton sourire",
+    "Tu es la mélodie de ma vie",
+    "Ensemble, nous créons la plus belle symphonie",
+    "Dans tes bras, je trouve la paix",
+    "Tu es ma plus belle chanson d'amour",
+    "Chaque battement de cœur résonne pour toi",
+    "Notre amour est une mélodie éternelle"
   ];
 
   useEffect(() => {
@@ -40,6 +42,10 @@ const Musique = () => {
     }
     return () => clearInterval(interval);
   }, [isPlaying]);
+
+  useEffect(() => {
+    loadSavedSongs();
+  }, []);
 
   const generateHeartBeat = () => {
     const newHeart = {
@@ -79,19 +85,80 @@ const Musique = () => {
     }
   };
 
-  const saveToDatabase = (type: string, content: string) => {
-    // Placeholder pour Supabase - sera implémenté une fois connecté
-    console.log(`Saving to database: ${type} - ${content}`);
-    toast({
-      title: "Chanson enregistrée ! 🎵",
-      description: "Ta chanson pour moi est précieusement sauvegardée.",
-      duration: 3000,
-    });
+  const loadSavedSongs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('songs')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error loading songs:', error);
+        return;
+      }
+      
+      setSavedSongs(data || []);
+    } catch (error) {
+      console.error('Error loading songs:', error);
+    }
+  };
+
+  const saveToDatabase = async (title: string, fileName: string) => {
+    try {
+      const { error } = await supabase
+        .from('songs')
+        .insert([{ title, file_name: fileName }]);
+      
+      if (error) {
+        console.error('Error saving song:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de sauvegarder la chanson.",
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+      
+      toast({
+        title: "Chanson enregistrée !",
+        description: "Ta chanson pour moi est précieusement sauvegardée.",
+        duration: 3000,
+      });
+      
+      loadSavedSongs();
+    } catch (error) {
+      console.error('Error saving song:', error);
+    }
+  };
+
+  const deleteSong = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('songs')
+        .delete()
+        .eq('id', id);
+      
+      if (error) {
+        console.error('Error deleting song:', error);
+        return;
+      }
+      
+      toast({
+        title: "Chanson supprimée",
+        description: "La chanson a été supprimée de la liste.",
+        duration: 2000,
+      });
+      
+      loadSavedSongs();
+    } catch (error) {
+      console.error('Error deleting song:', error);
+    }
   };
 
   const handleSongForMe = () => {
     if (currentSong) {
-      saveToDatabase('chanson', currentSong);
+      saveToDatabase(currentSong, currentSong);
       toast({
         title: "Ta chanson pour moi 💕",
         description: "Merci pour cette belle mélodie d'amour !",
@@ -146,14 +213,14 @@ const Musique = () => {
             Retour aux souvenirs
           </Button>
           <Badge variant="secondary" className="text-lg px-4 py-2">
-            🎵 Notre Musique 🎵
+            Notre Musique 🎵
           </Badge>
         </div>
 
         {/* Main title */}
         <div className="text-center mb-12">
           <h1 className="font-romantic text-4xl text-primary mb-4">
-            Cette chanson me fait penser à toi... 💕
+            Cette chanson me fait penser à toi...
           </h1>
           <p className="text-lg text-muted-foreground">
             Partage une mélodie qui résonne avec notre amour
@@ -204,7 +271,7 @@ const Musique = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-2xl text-primary">
-                Paroles d'Amour 💌
+                Paroles d'Amour
               </CardTitle>
               <CardDescription>
                 Les mots qui dansent au rythme de notre cœur
@@ -223,7 +290,7 @@ const Musique = () => {
           <Card className="mt-8 bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-2xl text-primary text-center">
-                🎵 Lecteur Audio 🎵
+                Lecteur Audio 🎵
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -262,12 +329,12 @@ const Musique = () => {
           <CardContent className="py-8">
             <div className="text-center space-y-4">
               <h3 className="font-romantic text-2xl text-primary">
-                La musique de notre amour 🎶
+                La musique de notre amour
               </h3>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 Chaque note que nous partageons renforce le lien qui nous unit. 
                 Cette mélodie sera pour toujours associée à toi, à nous, 
-                à ce moment où nous avons choisi de nous réconcilier. 💕
+                à ce moment où nous avons choisi de nous réconcilier.
               </p>
               <div className="flex justify-center space-x-2 mt-4">
                 {[1, 2, 3, 4, 5].map(i => (
@@ -277,6 +344,42 @@ const Musique = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Saved Songs Section */}
+        {savedSongs.length > 0 && (
+          <Card className="mt-8 bg-card/90 backdrop-blur-sm shadow-lg">
+            <CardHeader>
+              <CardTitle className="font-romantic text-2xl text-primary text-center">
+                Nos chansons sauvegardées
+              </CardTitle>
+              <CardDescription className="text-center">
+                Toutes les mélodies que tu as partagées avec moi
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {savedSongs.map((song) => (
+                  <div key={song.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium text-primary">{song.title}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Ajoutée le {new Date(song.created_at).toLocaleDateString('fr-FR')}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => deleteSong(song.id)}
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Navigation */}
         <div className="flex justify-center mt-8">

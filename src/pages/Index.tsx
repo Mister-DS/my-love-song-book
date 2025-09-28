@@ -14,12 +14,12 @@ const Index = () => {
   const excuseMessage = "Ma chérie, je sais que je ne suis pas toujours facile à vivre. Mon caractère peut parfois être difficile, et je m'en excuse sincèrement du fond de mon cœur...";
   
   const qualities = [
-    "Ta patience infinie avec moi 💫",
-    "Ton sourire qui illumine mes journées 🌟",
-    "Ta douceur qui apaise mon âme 🦋", 
-    "Ton intelligence qui me fascine ✨",
-    "Ta beauté intérieure et extérieure 💎",
-    "Ton cœur généreux et aimant 💖"
+    "Ta patience infinie avec moi",
+    "Ton sourire qui illumine mes journées",
+    "Ta douceur qui apaise mon âme", 
+    "Ton intelligence qui me fascine",
+    "Ta beauté intérieure et extérieure",
+    "Ton cœur généreux et aimant"
   ];
 
   const poem = `Dans le silence de mes regrets,
@@ -67,7 +67,7 @@ Ma plus précieuse promesse`;
         {/* Header */}
         <div className="text-center mb-12">
           <Badge variant="secondary" className="text-xl px-6 py-3 mb-6">
-            💌 Une Lettre d'Amour pour Toi 💌
+            Une Lettre d'Amour pour Toi 💌
           </Badge>
           <h1 className="font-romantic text-5xl md:text-6xl text-primary mb-4 animate-float-heart">
             Ma Chérie... 💕
@@ -88,7 +88,7 @@ Ma plus précieuse promesse`;
                 <div className="absolute -bottom-2 -left-2 text-2xl animate-float-heart">✨</div>
               </div>
               <p className="mt-4 font-romantic text-xl text-primary">
-                Nous deux, pour toujours 💖
+                Nous deux, pour toujours
               </p>
             </CardContent>
           </Card>
@@ -97,7 +97,7 @@ Ma plus précieuse promesse`;
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-3xl text-primary text-center">
-                Mes Excuses Sincères 💔
+                Mes Excuses Sincères
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center">
@@ -136,7 +136,7 @@ Ma plus précieuse promesse`;
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg border-2 border-primary/20">
             <CardHeader>
               <CardTitle className="font-romantic text-3xl text-primary text-center">
-                Ma Promesse 🤝💖
+                Ma Promesse 🤝
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-4">
@@ -160,7 +160,7 @@ Ma plus précieuse promesse`;
             <Card className="bg-card/90 backdrop-blur-sm shadow-lg animate-fade-in">
               <CardHeader>
                 <CardTitle className="font-romantic text-3xl text-primary text-center">
-                  Un Poème pour Toi 📝💕
+                  Un Poème pour Toi 📝
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center">

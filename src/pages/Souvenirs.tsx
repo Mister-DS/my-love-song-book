@@ -18,18 +18,18 @@ const Souvenirs = () => {
   const [runAwayButton, setRunAwayButton] = useState({ x: 0, y: 0, isRunning: false });
 
   const compliments = [
-    "Tu illumines chaque journée de ma vie 🌟",
-    "Ton sourire fait fondre mon cœur 💕",
-    "Tu es la plus belle chose qui me soit arrivée 🦋",
-    "Avec toi, je me sens complet 💖",
-    "Tu es ma source d'inspiration quotidienne ✨"
+    "Tu illumines chaque journée de ma vie",
+    "Ton sourire fait fondre mon cœur",
+    "Tu es la plus belle chose qui me soit arrivée",
+    "Avec toi, je me sens complet",
+    "Tu es ma source d'inspiration quotidienne"
   ];
 
   const timeline = [
-    { date: "Premier regard", description: "Le moment où nos yeux se sont croisés 👀💕" },
-    { date: "Premier rendez-vous", description: "Cette soirée magique ensemble 🌙✨" },
-    { date: "Je t'aime", description: "Ces trois petits mots qui ont tout changé 💌" },
-    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir 💖" }
+    { date: "Premier regard", description: "Le moment où nos yeux se sont croisés" },
+    { date: "Premier rendez-vous", description: "Cette soirée magique ensemble" },
+    { date: "Je t'aime", description: "Ces trois petits mots qui ont tout changé" },
+    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir" }
   ];
 
   useEffect(() => {
@@ -122,7 +122,7 @@ const Souvenirs = () => {
             Retour
           </Button>
           <Badge variant="secondary" className="text-lg px-4 py-2">
-            💕 Nos Souvenirs 💕
+            Nos Souvenirs 💕
           </Badge>
         </div>
 
@@ -131,19 +131,36 @@ const Souvenirs = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-2xl text-primary">
-                Notre Histoire d'Amour 📖
+                Notre Histoire d'Amour
               </CardTitle>
+              <CardDescription>
+                Les étapes de notre relation
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              {timeline.map((moment, index) => (
-                <div key={index} className="flex items-center gap-4">
-                  <div className="w-3 h-3 bg-primary rounded-full animate-pulse-glow"></div>
-                  <div>
-                    <h3 className="font-semibold text-primary">{moment.date}</h3>
-                    <p className="text-muted-foreground">{moment.description}</p>
+            <CardContent className="relative">
+              {/* Vertical line */}
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-primary"></div>
+              
+              <div className="space-y-8 relative">
+                {timeline.map((moment, index) => (
+                  <div key={index} className="flex items-start gap-6">
+                    <div className="relative z-10 w-4 h-4 bg-primary rounded-full ring-4 ring-background shadow-lg"></div>
+                    <div className="flex-1 pb-8">
+                      <div className="bg-muted/30 rounded-lg p-4">
+                        <h3 className="font-semibold text-primary text-lg">{moment.date}</h3>
+                        <p className="text-muted-foreground mt-1">{moment.description}</p>
+                        {index === timeline.length - 1 && (
+                          <div className="mt-2 flex space-x-1">
+                            <Heart className="w-4 h-4 text-primary animate-float-heart" fill="currentColor" />
+                            <Heart className="w-4 h-4 text-primary animate-float-heart" fill="currentColor" style={{ animationDelay: "0.5s" }} />
+                            <Heart className="w-4 h-4 text-primary animate-float-heart" fill="currentColor" style={{ animationDelay: "1s" }} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </CardContent>
           </Card>
 
@@ -167,29 +184,39 @@ const Souvenirs = () => {
         <Card className="mt-8 bg-card/90 backdrop-blur-sm shadow-lg">
           <CardHeader>
             <CardTitle className="font-romantic text-2xl text-primary text-center">
-              Est-ce que tu veux toujours de moi ? 🥺
+              Est-ce que tu veux toujours de moi ?
             </CardTitle>
+            <CardDescription className="text-center">
+              Une question importante... Essaie de cliquer sur "Non" 😉
+            </CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center gap-4">
-            <Button 
-              onClick={handleYes}
-              className="btn-romantic text-white px-8 py-3"
-            >
-              Oui 💕
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={handleRunAwayNo}
-              className={`transition-all duration-300 ${runAwayButton.isRunning ? 'opacity-50' : ''}`}
-              style={runAwayButton.isRunning ? {
-                position: 'fixed',
-                left: runAwayButton.x,
-                top: runAwayButton.y,
-                zIndex: 50
-              } : {}}
-            >
-              Non
-            </Button>
+          <CardContent className="text-center">
+            <div className="relative h-80 w-full max-w-2xl mx-auto border-2 border-dashed border-primary/30 rounded-lg overflow-hidden bg-muted/10">
+              <div className="absolute inset-8 flex justify-center items-center gap-8">
+                <Button 
+                  onClick={handleYes}
+                  className="btn-romantic text-white px-8 py-3 z-10"
+                >
+                  Oui 💕
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={handleRunAwayNo}
+                  className={`transition-all duration-300 px-8 py-3 ${runAwayButton.isRunning ? 'opacity-50' : ''}`}
+                  style={runAwayButton.isRunning ? {
+                    position: 'absolute',
+                    left: Math.max(0, Math.min(runAwayButton.x, window.innerWidth - 100)),
+                    top: Math.max(0, Math.min(runAwayButton.y, window.innerHeight - 50)),
+                    zIndex: 50
+                  } : {}}
+                >
+                  Non
+                </Button>
+              </div>
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-muted-foreground animate-pulse">
+                Le bouton "Non" a peur de toi ! 
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -199,7 +226,7 @@ const Souvenirs = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-xl text-primary">
-                Jeu des Cœurs 💖
+                Jeu des Cœurs
               </CardTitle>
               <CardDescription>
                 Clique sur les cœurs qui apparaissent ! Score: {gameScore}/10
@@ -216,7 +243,7 @@ const Souvenirs = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-xl text-primary">
-                Lettre d'Amour 💌
+                Lettre d'Amour
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -245,7 +272,7 @@ const Souvenirs = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-xl text-primary">
-                Livre d'Or 📝
+                Livre d'Or
               </CardTitle>
               <CardDescription>
                 Écris-moi quelque chose...
@@ -277,7 +304,7 @@ const Souvenirs = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="font-romantic text-xl text-primary">
-                Réponse Secrète 🤫
+                Réponse Secrète
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -317,13 +344,13 @@ const Souvenirs = () => {
         <Card className="mt-8 bg-card/90 backdrop-blur-sm shadow-lg">
           <CardHeader>
             <CardTitle className="font-romantic text-xl text-primary text-center">
-              Comment te sens-tu maintenant ? 💭
+              Comment te sens-tu maintenant ?
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap justify-center gap-4">
             {[
               { text: "Je te pardonne 💕", value: "pardonne" },
-              { text: "Encore un effort 😅", value: "effort" },
+              { text: "Encore un effort", value: "effort" },
               { text: "Bisou virtuel 💋", value: "bisou" }
             ].map(choice => (
               <Button
@@ -342,7 +369,7 @@ const Souvenirs = () => {
         <Card className="mt-8 bg-card/90 backdrop-blur-sm shadow-lg">
           <CardHeader>
             <CardTitle className="font-romantic text-xl text-primary text-center">
-              Qu'est-ce qui te ferait plaisir ? 💫
+              Qu'est-ce qui te ferait plaisir ?
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap justify-center gap-4">
