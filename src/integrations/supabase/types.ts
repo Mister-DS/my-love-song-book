@@ -17,27 +17,89 @@ export type Database = {
       songs: {
         Row: {
           created_at: string
+          updated_at: string | null
           file_name: string
           id: string
           title: string
         }
         Insert: {
           created_at?: string
+          updated_at?: string | null
           file_name: string
           id?: string
           title: string
         }
         Update: {
           created_at?: string
+          updated_at?: string | null
           file_name?: string
           id?: string
           title?: string
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          id: string
+          type: string
+          content: string
+          created_at: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          type: string
+          content: string
+          created_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          type?: string
+          content?: string
+          created_at?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      heart_scores: {
+        Row: {
+          id: string
+          score: number
+          created_at: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          score: number
+          created_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          score?: number
+          created_at?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      message_stats: {
+        Row: {
+          type: string | null
+          total_count: number | null
+          last_interaction: string | null
+        }
+        Relationships: []
+      }
+      top_heart_scores: {
+        Row: {
+          score: number | null
+          created_at: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

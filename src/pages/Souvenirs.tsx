@@ -6,42 +6,69 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Heart, ArrowLeft, Music, Send, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { saveMessage, saveHeartScore, getHighestHeartScore } from "@/integrations/supabase/functions";
+
+// Ajout d'un style global pour garantir que les cœurs soient toujours cliquables
+const floatingHeartStyle = `
+.floating-heart {
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.7));
+  transition: transform 0.2s ease;
+}
+
+.floating-heart:hover {
+  transform: scale(1.3);
+  filter: drop-shadow(0 0 10px rgba(255, 105, 180, 1));
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+`;
 
 const Souvenirs = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [gameScore, setGameScore] = useState(0);
+  const [highestScore, setHighestScore] = useState(0);
   const [hearts, setHearts] = useState<{id: number, x: number, y: number}[]>([]);
   const [displayedCompliments, setDisplayedCompliments] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showSecretResponse, setShowSecretResponse] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [runAwayButton, setRunAwayButton] = useState({ x: 0, y: 0, isRunning: false });
+  const [isLoading, setIsLoading] = useState(false);
 
   const compliments = [
-    "Tes écarts de folies",
-    "Ta manière de bouder",
-    "Ton rire contagieux",
-    "La douceur de tes câlins",
-    "Ton intelligence et ta sagesse",
-    "Ta passion pour l'amour",
-    "la manière dont tu montres que je suis à toi",
-    "Ta gentillesse", 
-    "Tes magnifiques yeux bleus",
-    "Tes cheveux d'or",
-    "Ton visage si doux et parfait",
-    "Ton corps si joli",
-    "Tous tes petits défauts qui te rendent unique",
+    "Tu illumines chaque journée de ma vie",
+    "Ton sourire fait fondre mon cœur",
+    "Tu es la plus belle chose qui me soit arrivée",
+    "Avec toi, je me sens complet",
+    "Tu es ma source d'inspiration quotidienne"
   ];
 
   const timeline = [
-    { date: "Premier Message (Octobre 2023)", description: "Le moment où nos chemin se sont croisés" },
-    { date: "Premier rendez-vous (Janvier 2024)", description: "Cette soirée magique ensemble" },
-    { date: "Premier baiser (Janvier 2024)", description: "Le début de notre histoire" },
-    { date: "Je t'aime (Février 2024)", description: "Ces trois petits mots qui ont tout changé" },
-    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir" },
-    { date: "Pour toujours", description: "Je promets de toujours t'aimer et te chérir 💕" },
+    { date: "Premier regard", description: "Le moment où nos yeux se sont croisés" },
+    { date: "Premier rendez-vous", description: "Cette soirée magique ensemble" },
+    { date: "Je t'aime", description: "Ces trois petits mots qui ont tout changé" },
+    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir" }
   ];
+
+  // Charger le meilleur score au démarrage
+  useEffect(() => {
+    const loadHighestScore = async () => {
+      try {
+        const score = await getHighestHeartScore();
+        setHighestScore(score);
+      } catch (error) {
+        console.error("Erreur lors du chargement du meilleur score:", error);
+      }
+    };
+
+    loadHighestScore();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -59,16 +86,43 @@ const Souvenirs = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
-  const handleHeartClick = (heartId: number) => {
-    setGameScore(prev => prev + 1);
+  const handleHeartClick = async (heartId: number) => {
+    console.log("Cœur cliqué:", heartId);
+    const newScore = gameScore + 1;
+    setGameScore(newScore);
     setHearts(prev => prev.filter(h => h.id !== heartId));
     
-    if (gameScore + 1 === 10) {
-      toast({
-        title: "Bravo mon amour ! 💕",
-        description: "Tu as capturé tous les cœurs comme tu as capturé le mien !",
-        duration: 4000,
-      });
+    if (newScore >= 10) {
+      setIsLoading(true);
+      try {
+        // Enregistrer le score dans Supabase
+        await saveHeartScore(newScore);
+        
+        // Mettre à jour le score le plus élevé si nécessaire
+        if (newScore > highestScore) {
+          setHighestScore(newScore);
+        }
+        
+        toast({
+          title: "Bravo mon amour ! 💕",
+          description: "Tu as capturé tous les cœurs comme tu as capturé le mien !",
+          duration: 4000,
+        });
+      } catch (error) {
+        console.error("Erreur lors de l'enregistrement du score:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible d'enregistrer ton score. Mais tu restes toujours gagnante dans mon cœur !",
+          variant: "destructive",
+          duration: 3000,
+        });
+      } finally {
+        setIsLoading(false);
+        // Réinitialiser le score après avoir atteint l'objectif
+        setTimeout(() => {
+          setGameScore(0);
+        }, 2000);
+      }
     }
   };
 
@@ -103,26 +157,73 @@ const Souvenirs = () => {
     }, 2000);
   };
 
-  const handleYes = () => {
-    toast({
-      title: "Tu me rends si heureux ! 💕",
-      description: "Je promets de faire encore plus d'efforts pour nous.",
-      duration: 4000,
-    });
+  const handleYes = async () => {
+    setIsLoading(true);
+    try {
+      await saveMessage('reponse_question', 'Oui, je veux toujours de toi');
+      
+      toast({
+        title: "Tu me rends si heureux ! 💕",
+        description: "Je promets de faire encore plus d'efforts pour nous.",
+        duration: 4000,
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de la réponse:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur s'est produite, mais ton 'Oui' reste gravé dans mon cœur !",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const saveToDatabase = (type: string, content: string) => {
-    // Placeholder pour Supabase - sera implémenté une fois connecté
-    console.log(`Saving to database: ${type} - ${content}`);
-    toast({
-      title: "Message enregistré 👌",
-      description: "Tes mots sont précieux pour moi !",
-      duration: 3000,
-    });
+  const handleSaveToDatabase = async (type: string, content: string) => {
+    setIsLoading(true);
+    try {
+      const success = await saveMessage(type, content);
+      
+      if (success) {
+        toast({
+          title: "Message enregistré 👌",
+          description: "Tes mots sont précieux pour moi !",
+          duration: 3000,
+        });
+        
+        // Réinitialiser les champs de texte
+        if (type === 'livre_dor') {
+          (document.getElementById('livreDor') as HTMLTextAreaElement).value = '';
+        } else if (type === 'reponse_secrete') {
+          (document.getElementById('reponseSecrete') as HTMLTextAreaElement).value = '';
+        }
+      } else {
+        toast({
+          title: "Erreur",
+          description: "Impossible d'enregistrer ton message. Réessaie plus tard.",
+          variant: "destructive",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur s'est produite. Réessaie plus tard.",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen starry-bg relative overflow-hidden">
+      {/* Style global pour les animations de cœurs */}
+      <style>{floatingHeartStyle}</style>
+      
       {/* Shooting stars */}
       <div className="shooting-star" style={{ top: "10%", left: "0%" }}></div>
       
@@ -184,7 +285,7 @@ const Souvenirs = () => {
                     <div className="flex-1 pb-8">
                       <div className="bg-muted/30 rounded-lg p-4">
                         <h3 className="font-semibold text-primary text-lg">{moment.date}</h3>
-                        <p className="text-muted-foreground mt-1">{moment.description}</p>
+                        <p className="text-muted-foreground mt-1">{moment.description}</p<p className="text-muted-foreground mt-1">{moment.description}</p>
                         {index === timeline.length - 1 && (
                           <div className="mt-2 flex space-x-1">
                             <Heart className="w-4 h-4 text-primary animate-float-heart" fill="currentColor" />
@@ -236,8 +337,9 @@ const Souvenirs = () => {
                 <Button 
                   onClick={handleYes}
                   className="btn-romantic text-white px-8 py-3 z-10"
+                  disabled={isLoading}
                 >
-                  Oui 💕
+                  {isLoading ? 'Enregistrement...' : 'Oui 💕'}
                 </Button>
                 <Button 
                   variant="outline"
@@ -249,6 +351,7 @@ const Souvenirs = () => {
                     top: Math.max(0, Math.min(runAwayButton.y, window.innerHeight - 50)),
                     zIndex: 50
                   } : {}}
+                  disabled={isLoading}
                 >
                   Non
                 </Button>
@@ -270,12 +373,22 @@ const Souvenirs = () => {
               </CardTitle>
               <CardDescription>
                 Clique sur les cœurs qui apparaissent ! Score: {gameScore}/10
+                {highestScore > 0 && ` (Meilleur score: ${highestScore})`}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={spawnHeart} className="w-full">
+              <Button 
+                onClick={spawnHeart} 
+                className="w-full bg-primary hover:bg-primary/80 text-white"
+                disabled={isLoading}
+              >
                 Faire apparaître un cœur
               </Button>
+              {gameScore > 0 && (
+                <p className="text-center mt-4 text-primary font-bold">
+                  Score: {gameScore}/10
+                </p>
+              )}
             </CardContent>
           </Card>
 
@@ -291,14 +404,17 @@ const Souvenirs = () => {
                 onClick={() => setShowLetter(!showLetter)}
                 variant="outline"
                 className="w-full mb-4"
+                disabled={isLoading}
               >
                 {showLetter ? "Fermer la lettre" : "Ouvrir la lettre"}
               </Button>
               {showLetter && (
                 <div className="bg-muted/50 p-4 rounded-lg text-sm leading-relaxed">
-                  <p className="font-romantic text-lg mb-2">Ma chérie,</p>
+                  <p className="font-romantic text-lg mb-2">Ma princesse,</p>
                   <p>Je sais que je ne suis pas toujours facile à vivre. Mon caractère peut parfois être difficile, et je m'en excuse sincèrement.</p>
                   <p className="mt-2">Mais sache que tu es la lumière de ma vie, et je veux devenir une meilleure version de moi-même pour nous deux.</p>
+                  <p className="mt-2">Dans ma vie je n'ai jamais eu vraiment de relation donc je veux tout faire pour conserver la seule, la nôtre...</p>
+                  <p className="mt-2">Je sais que je suis pas hyper doué voir pas dutout... mais je t'aime d'un amour sincère. Toutes les autres putes peuvents aller se faire mettre.</p>
                   <p className="mt-2 font-romantic">Avec tout mon amour, Simon 💕</p>
                 </div>
               )}
@@ -323,19 +439,29 @@ const Souvenirs = () => {
                 placeholder="Tes mots pour moi..."
                 className="resize-none"
                 id="livreDor"
+                disabled={isLoading}
               />
               <Button 
                 onClick={() => {
                   const message = (document.getElementById('livreDor') as HTMLTextAreaElement)?.value;
                   if (message) {
-                    saveToDatabase('livre_dor', message);
-                    (document.getElementById('livreDor') as HTMLTextAreaElement).value = '';
+                    handleSaveToDatabase('livre_dor', message);
                   }
                 }}
                 className="w-full flex items-center gap-2"
+                disabled={isLoading}
               >
-                <Send size={16} />
-                Écrire un mot pour toi
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin mr-2">⏳</span>
+                    Enregistrement...
+                  </>
+                ) : (
+                  <>
+                    <Send size={16} />
+                    Écrire un mot pour toi
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>
@@ -352,6 +478,7 @@ const Souvenirs = () => {
                 onClick={() => setShowSecretResponse(!showSecretResponse)}
                 variant="outline"
                 className="w-full"
+                disabled={isLoading}
               >
                 {showSecretResponse ? "Cacher" : "Réponse secrète"}
               </Button>
@@ -361,18 +488,19 @@ const Souvenirs = () => {
                     placeholder="Dis-moi ce que tu penses vraiment..."
                     className="resize-none"
                     id="reponseSecrete"
+                    disabled={isLoading}
                   />
                   <Button 
                     onClick={() => {
                       const message = (document.getElementById('reponseSecrete') as HTMLTextAreaElement)?.value;
                       if (message) {
-                        saveToDatabase('reponse_secrete', message);
-                        (document.getElementById('reponseSecrete') as HTMLTextAreaElement).value = '';
+                        handleSaveToDatabase('reponse_secrete', message);
                       }
                     }}
                     className="w-full"
+                    disabled={isLoading}
                   >
-                    Envoyer secrètement
+                    {isLoading ? 'Enregistrement...' : 'Envoyer secrètement'}
                   </Button>
                 </>
               )}
@@ -395,9 +523,10 @@ const Souvenirs = () => {
             ].map(choice => (
               <Button
                 key={choice.value}
-                onClick={() => saveToDatabase('choix_tendre', choice.text)}
+                onClick={() => handleSaveToDatabase('choix_tendre', choice.text)}
                 variant="outline"
                 className="px-6 py-3"
+                disabled={isLoading}
               >
                 {choice.text}
               </Button>
@@ -421,8 +550,9 @@ const Souvenirs = () => {
             ].map(choice => (
               <Button
                 key={choice.value}
-                onClick={() => saveToDatabase('sondage', choice.text)}
+                onClick={() => handleSaveToDatabase('sondage', choice.text)}
                 className="btn-romantic text-white px-6 py-3"
+                disabled={isLoading}
               >
                 {choice.text}
               </Button>
