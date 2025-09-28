@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Heart, Star, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import couplePhoto from "@/assets/elle-moi.jpg";
+import couplePhoto from "@/assets/couple-image.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
