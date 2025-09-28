@@ -12,32 +12,52 @@ const Souvenirs = () => {
   const { toast } = useToast();
   const [gameScore, setGameScore] = useState(0);
   const [hearts, setHearts] = useState<{id: number, x: number, y: number}[]>([]);
-  const [currentCompliment, setCurrentCompliment] = useState(0);
+  const [displayedCompliments, setDisplayedCompliments] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [showSecretResponse, setShowSecretResponse] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [runAwayButton, setRunAwayButton] = useState({ x: 0, y: 0, isRunning: false });
 
   const compliments = [
-    "Tu illumines chaque journée de ma vie",
-    "Ton sourire fait fondre mon cœur",
-    "Tu es la plus belle chose qui me soit arrivée",
-    "Avec toi, je me sens complet",
-    "Tu es ma source d'inspiration quotidienne"
+    "Tes écarts de folies",
+    "Ta manière de bouder",
+    "Ton rire contagieux",
+    "La douceur de tes câlins",
+    "Ton intelligence et ta sagesse",
+    "Ta passion pour l'amour",
+    "la manière dont tu montres que je suis à toi",
+    "Ta gentillesse", 
+    "Tes magnifiques yeux bleus",
+    "Tes cheveux d'or",
+    "Ton visage si doux et parfait",
+    "Ton corps si joli",
+    "Tous tes petits défauts qui te rendent unique",
   ];
 
   const timeline = [
-    { date: "Premier regard", description: "Le moment où nos yeux se sont croisés" },
-    { date: "Premier rendez-vous", description: "Cette soirée magique ensemble" },
-    { date: "Je t'aime", description: "Ces trois petits mots qui ont tout changé" },
-    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir" }
+    { date: "Premier Message (Octobre 2023)", description: "Le moment où nos chemin se sont croisés" },
+    { date: "Premier rendez-vous (Janvier 2024)", description: "Cette soirée magique ensemble" },
+    { date: "Premier baiser (Janvier 2024)", description: "Le début de notre histoire" },
+    { date: "Je t'aime (Février 2024)", description: "Ces trois petits mots qui ont tout changé" },
+    { date: "Aujourd'hui", description: "Et tous les moments merveilleux à venir" },
+    { date: "Pour toujours", description: "Je promets de toujours t'aimer et te chérir 💕" },
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentCompliment((prev) => (prev + 1) % compliments.length);
+      if (currentIndex < compliments.length) {
+        // Ajouter un nouveau compliment à la liste
+        setDisplayedCompliments(prev => [...prev, compliments[currentIndex]]);
+        setCurrentIndex(prev => prev + 1);
+      } else {
+        // Réinitialiser pour recommencer le cycle
+        setDisplayedCompliments([]);
+        setCurrentIndex(0);
+      }
     }, 3000);
+    
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]);
 
   const handleHeartClick = (heartId: number) => {
     setGameScore(prev => prev + 1);
@@ -53,16 +73,24 @@ const Souvenirs = () => {
   };
 
   const spawnHeart = () => {
+    // Obtenir les dimensions du conteneur principal plutôt que de la fenêtre entière
+    const container = document.querySelector('.container');
+    const containerRect = container?.getBoundingClientRect();
+    
+    // Valeurs par défaut si le conteneur n'est pas disponible
+    const containerWidth = containerRect?.width || window.innerWidth;
+    const containerHeight = containerRect?.height || window.innerHeight;
+    
     const newHeart = {
       id: Date.now(),
-      x: Math.random() * (window.innerWidth - 50),
-      y: Math.random() * (window.innerHeight - 50)
+      x: Math.random() * (containerWidth - 50),
+      y: Math.random() * (containerHeight - 50)
     };
     setHearts(prev => [...prev, newHeart]);
     
     setTimeout(() => {
       setHearts(prev => prev.filter(h => h.id !== newHeart.id));
-    }, 3000);
+    }, 5000); // Augmenter le temps à 5 secondes pour donner plus de temps pour cliquer
   };
 
   const handleRunAwayNo = () => {
@@ -87,7 +115,7 @@ const Souvenirs = () => {
     // Placeholder pour Supabase - sera implémenté une fois connecté
     console.log(`Saving to database: ${type} - ${content}`);
     toast({
-      title: "Message enregistré 💌",
+      title: "Message enregistré 👌",
       description: "Tes mots sont précieux pour moi !",
       duration: 3000,
     });
@@ -100,14 +128,22 @@ const Souvenirs = () => {
       
       {/* Game hearts */}
       {hearts.map(heart => (
-        <Heart
+        <div
           key={heart.id}
-          className="absolute cursor-pointer text-primary animate-pulse-glow floating-heart z-10"
-          style={{ left: heart.x, top: heart.y }}
-          size={30}
-          onClick={() => handleHeartClick(heart.id)}
-          fill="currentColor"
-        />
+          className="absolute z-50 cursor-pointer"
+          style={{ 
+            left: `${heart.x}px`, 
+            top: `${heart.y}px`,
+            pointerEvents: 'auto'
+          }}
+        >
+          <Heart
+            className="text-primary animate-pulse-glow floating-heart"
+            size={40} // Augmenter la taille pour faciliter le clic
+            onClick={() => handleHeartClick(heart.id)}
+            fill="currentColor"
+          />
+        </div>
       ))}
 
       <div className="container mx-auto px-4 py-8 relative z-20">
@@ -172,10 +208,14 @@ const Souvenirs = () => {
                 Ce que j'aime chez toi
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex items-center justify-center h-32">
-              <p className="text-lg text-center font-medium text-primary typewriter">
-                {compliments[currentCompliment]}
-              </p>
+            <CardContent className="flex flex-col items-center justify-center min-h-[200px]">
+              <div className="text-lg text-center font-medium space-y-3">
+                {displayedCompliments.map((compliment, index) => (
+                  <p key={index} className="text-primary typewriter">
+                    {compliment}
+                  </p>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -375,9 +415,9 @@ const Souvenirs = () => {
           <CardContent className="flex flex-wrap justify-center gap-4">
             {[
               { text: "Un câlin 🤗", value: "calin" },
-              { text: "Une sortie 👫", value: "sortie" },
+              { text: "Une sortie 💫", value: "sortie" },
               { text: "Du silence 🌙", value: "silence" },
-              { text: "Un resto 🍝", value: "resto" }
+              { text: "Un resto 🍽", value: "resto" }
             ].map(choice => (
               <Button
                 key={choice.value}

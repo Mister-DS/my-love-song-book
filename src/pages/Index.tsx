@@ -4,14 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Heart, Star, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import couplePhoto from "@/assets/couple-photo.jpg";
+import couplePhoto from "@/assets/Elle-moi.JPG";
 
 const Index = () => {
   const navigate = useNavigate();
   const [typewriterText, setTypewriterText] = useState("");
   const [showPoem, setShowPoem] = useState(false);
 
-  const excuseMessage = "Ma chérie, je sais que je ne suis pas toujours facile à vivre. Mon caractère peut parfois être difficile, et je m'en excuse sincèrement du fond de mon cœur...";
+  const excuseMessage = "Ma princesse, je sais que je ne suis pas toujours facile à vivre. Mon caractère peut parfois être difficile, et je m'en excuse sincèrement du fond de mon cœur...";
   
   const qualities = [
     "Ta patience infinie avec moi",
@@ -19,23 +19,43 @@ const Index = () => {
     "Ta douceur qui apaise mon âme", 
     "Ton intelligence qui me fascine",
     "Ta beauté intérieure et extérieure",
-    "Ton cœur généreux et aimant"
+    "Ton cœur généreux et aimant",
+    "Ton coeur qui pardonne mes erreurs",
+    "Ton soutien inébranlable",
+    "Ton rire qui réchauffe mon cœur",
+    "Ta créativité sans limite",
+    "Ton optimisme contagieux",
+    "Ta force dans les moments difficiles",
+    "Ton amour inconditionnel",
+    "Ta capacité à me comprendre sans mots",
+    "Ton esprit aventureux",
+    "Ta fidélité et loyauté",
+    "Ton sens de l'humour qui me fait rire",
+    "Ta tendresse qui me réconforte",
+    "Ton authenticité qui me touche profondément",
+    "Ton énergie positive qui m'inspire"
   ];
 
-  const poem = `Dans le silence de mes regrets,
-Résonne l'écho de tes "je t'aime"
-Tu es ma lumière, mon secret
-La plus belle de tous mes poèmes
-
-Pardonne-moi mes moments d'ombre
-Où mon caractère prend le dessus
-Tu mérites bien mieux que ces sombres
-Instants où je ne suis plus moi
-
-Avec toi, je veux devenir meilleur
-Cultiver la patience et la tendresse
-Tu es le battement de mon cœur
-Ma plus précieuse promesse`;
+  const poem = `Dans le silence de la nuit étoilée,
+  Descend des étoiles, la plus douce des pensées.
+  C'est toi, qui me tends la main,
+  A toi celle qui me montre le chemin.
+  A toi qui sais pardonner mes erreurs,
+  A toi qui sèches mes larmes, apaise mes peurs.
+  Ton sourire est un rayon de soleil,
+  Toutes pensées sombres s'envolent, s'émerveillent.
+  Ton rire est une mélodie enchantée,
+  Qui fait danser mon cœur, le fait vibrer.
+  Ta voix est une douce caresse,
+  Qui réchauffe mon âme, apaise ma détresse.
+  Tes yeux sont des étoiles brillantes,
+  Qui illuminent mes nuits, me rendent vivant.
+  Toi princesse au cheveaux d'or,
+  a qui on a donné tellement de remords.
+  Mais a qui je ferrai tout pour être meilleur.
+  Même si je dois finir par défier la mort... 
+  Je t'aime plus que tout au monde,
+  J'espère que notre amour jamais ne s'effondre.`;
 
   useEffect(() => {
     let currentIndex = 0;
@@ -145,11 +165,11 @@ Ma plus précieuse promesse`;
                   Je m'engage solennellement à :
                 </p>
                 <ul className="space-y-2 text-lg">
-                  <li>🌱 Travailler sur mon caractère chaque jour</li>
-                  <li>💬 Mieux communiquer avec toi</li>
-                  <li>👂 T'écouter avec plus d'attention</li>
-                  <li>💝 Te montrer à quel point tu comptes pour moi</li>
-                  <li>🌟 Devenir l'homme que tu mérites</li>
+                  <li>Travailler sur mon caractère chaque jour</li>
+                  <li>Mieux communiquer avec toi</li>
+                  <li>T'écouter avec plus d'attention</li>
+                  <li>Te montrer à quel point tu comptes pour moi</li>
+                  <li>Devenir l'homme que tu mérites</li>
                 </ul>
               </div>
             </CardContent>
