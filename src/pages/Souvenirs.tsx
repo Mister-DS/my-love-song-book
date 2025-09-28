@@ -193,9 +193,12 @@ const Souvenirs = () => {
   const handleSaveToDatabase = async (type: string, content: string) => {
     setIsLoading(true);
     try {
+      console.log(`Tentative d'enregistrement - Type: ${type}, Contenu: ${content}`); // Log de débogage
+      
       const success = await saveMessage(type, content);
       
       if (success) {
+        console.log("Enregistrement réussi!");
         toast({
           title: "Message enregistré 👌",
           description: "Tes mots sont précieux pour moi !",
@@ -209,6 +212,7 @@ const Souvenirs = () => {
           (document.getElementById('reponseSecrete') as HTMLTextAreaElement).value = '';
         }
       } else {
+        console.error("Échec de l'enregistrement dans Supabase");
         toast({
           title: "Erreur",
           description: "Impossible d'enregistrer ton message. Réessaie plus tard.",
@@ -503,8 +507,16 @@ const Souvenirs = () => {
                   <Button 
                     onClick={() => {
                       const message = (document.getElementById('reponseSecrete') as HTMLTextAreaElement)?.value;
+                      console.log("Contenu de la réponse secrète:", message); // Vérifier la valeur
                       if (message) {
                         handleSaveToDatabase('reponse_secrete', message);
+                      } else {
+                        toast({
+                          title: "Message vide",
+                          description: "Merci d'écrire quelque chose avant d'envoyer",
+                          variant: "destructive",
+                          duration: 3000,
+                        });
                       }
                     }}
                     className="w-full"
