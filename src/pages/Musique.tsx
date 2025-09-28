@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Upload, Play, Pause, Heart, Music, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import StarryBackground from "@/components/StarryBackground";
 
 const Musique = () => {
   const navigate = useNavigate();
@@ -175,16 +176,23 @@ const Musique = () => {
   };
 
   return (
-    <div className="min-h-screen starry-bg relative overflow-hidden">
-      {/* Animated hearts */}
+    <StarryBackground>
+      {/* Game hearts */}
       {heartBeats.map(heart => (
-        <Heart
+        <div
           key={heart.id}
-          className="absolute text-primary animate-float-heart pointer-events-none z-10"
-          style={{ left: heart.x, top: heart.y }}
-          size={24}
-          fill="currentColor"
-        />
+          className="absolute z-50"
+          style={{ 
+            left: `${heart.x}px`, 
+            top: `${heart.y}px`
+          }}
+        >
+          <Heart
+            className="text-primary animate-pulse-glow"
+            size={24}
+            fill="currentColor"
+          />
+        </div>
       ))}
 
       {/* Equalizer visualization */}
@@ -391,7 +399,7 @@ const Musique = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </StarryBackground>
   );
 };
 

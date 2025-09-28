@@ -7,26 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Heart, ArrowLeft, Music, Send, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { saveMessage, saveHeartScore, getHighestHeartScore } from "@/integrations/supabase/functions";
-
-// Ajout d'un style global pour garantir que les cœurs soient toujours cliquables
-const floatingHeartStyle = `
-.floating-heart {
-  animation: float 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.7));
-  transition: transform 0.2s ease;
-}
-
-.floating-heart:hover {
-  transform: scale(1.3);
-  filter: drop-shadow(0 0 10px rgba(255, 105, 180, 1));
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-`;
+import StarryBackground from "@/components/StarryBackground";
 
 const Souvenirs = () => {
   const navigate = useNavigate();
@@ -234,33 +215,7 @@ const Souvenirs = () => {
   };
 
   return (
-    <div className="min-h-screen starry-bg relative overflow-hidden">
-      {/* Style global pour les animations de cœurs */}
-      <style>{floatingHeartStyle}</style>
-      
-      {/* Shooting stars */}
-      <div className="shooting-star" style={{ top: "10%", left: "0%" }}></div>
-      
-      {/* Game hearts */}
-      {hearts.map(heart => (
-        <div
-          key={heart.id}
-          className="absolute z-50 cursor-pointer"
-          style={{ 
-            left: `${heart.x}px`, 
-            top: `${heart.y}px`,
-            pointerEvents: 'auto'
-          }}
-        >
-          <Heart
-            className="text-primary animate-pulse-glow floating-heart"
-            size={40} // Augmenter la taille pour faciliter le clic
-            onClick={() => handleHeartClick(heart.id)}
-            fill="currentColor"
-          />
-        </div>
-      ))}
-
+    <StarryBackground>
       <div className="container mx-auto px-4 py-8 relative z-20">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -601,7 +556,7 @@ const Souvenirs = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </StarryBackground>
   );
 };
 

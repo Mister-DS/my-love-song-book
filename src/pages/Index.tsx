@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, Star, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import couplePhoto from "@/assets/couple-image.jpg";
+import StarryBackground from "@/components/StarryBackground";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -73,21 +74,12 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen starry-bg relative overflow-hidden">
-      {/* Shooting stars */}
-      <div className="shooting-star" style={{ top: "20%", left: "0%" }}></div>
-      <div className="shooting-star" style={{ top: "60%", left: "0%", animationDelay: "5s" }}></div>
-      
-      {/* Floating hearts */}
-      <Heart className="absolute top-1/4 right-10 text-primary animate-float-heart z-10" fill="currentColor" size={20} />
-      <Heart className="absolute top-3/4 left-16 text-secondary animate-float-heart z-10" fill="currentColor" size={16} style={{ animationDelay: "1s" }} />
-      <Star className="absolute top-1/3 left-1/4 text-accent animate-float-heart z-10" fill="currentColor" size={18} style={{ animationDelay: "2s" }} />
-
+    <StarryBackground>
       <div className="container mx-auto px-4 py-8 relative z-20">
         {/* Header */}
         <div className="text-center mb-12">
           <Badge variant="secondary" className="text-xl px-6 py-3 mb-6">
-            Une Lettre d'Amour pour Toi 💌
+            Une Lettre d'Amour pour Toi 👌
           </Badge>
           <h1 className="font-romantic text-5xl md:text-6xl text-primary mb-4 animate-float-heart">
             Ma Chérie... 💕
@@ -99,11 +91,13 @@ const Index = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg border-2 border-primary/20">
             <CardContent className="p-8 text-center">
               <div className="relative inline-block">
-                <img 
-                  src={couplePhoto}
-                  alt="Notre photo ensemble"
-                  className="rounded-full w-48 h-48 md:w-64 md:h-64 mx-auto object-cover shadow-lg border-4 border-primary/30"
-                />
+                <div className="w-48 h-48 md:w-64 md:h-64 mx-auto rounded-full overflow-hidden border-4 border-primary/30 shadow-lg">
+                  <img 
+                    src={couplePhoto}
+                    alt="Notre photo ensemble"
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
                 <div className="absolute -top-2 -right-2 text-3xl animate-pulse-glow">💕</div>
                 <div className="absolute -bottom-2 -left-2 text-2xl animate-float-heart">✨</div>
               </div>
@@ -156,7 +150,7 @@ const Index = () => {
           <Card className="bg-card/90 backdrop-blur-sm shadow-lg border-2 border-primary/20">
             <CardHeader>
               <CardTitle className="font-romantic text-3xl text-primary text-center">
-                Ma Promesse 🤝
+                Ma Promesse 🤞
               </CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-4">
@@ -211,7 +205,7 @@ const Index = () => {
                   Avec tout mon amour,
                 </p>
                 <p className="font-romantic text-3xl text-primary font-bold">
-                  Simon 💌
+                  Simon 👌
                 </p>
                 <div className="flex justify-center space-x-1 mt-4">
                   <span className="text-2xl animate-pulse-glow">✨</span>
@@ -234,7 +228,7 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>
+    </StarryBackground>
   );
 };
 
